@@ -348,6 +348,11 @@ h2 {
   font-size: 11px;
 }
 
+.info-card small + small {
+  margin-top: -1px;
+  color: #c7d7ed;
+}
+
 .notice {
   display: flex;
   align-items: flex-start;
