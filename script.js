@@ -32,50 +32,88 @@ const countries = [
   { code: "1", name: "Amerika Serikat / Kanada dan wilayah NANP" }
 ];
 
+// Detailed Indonesia region mapping by area code
+const indonesiaAreaCodes = {
+  "811": { region: "Jawa Tengah", city: "Semarang" },
+  "812": { region: "Jawa Barat", city: "Bandung / Jakarta" },
+  "813": { region: "Jawa Timur", city: "Surabaya" },
+  "814": { region: "Jawa Barat", city: "Bandung" },
+  "815": { region: "Jawa Barat", city: "Bekasi" },
+  "816": { region: "Jawa Tengah", city: "Yogyakarta" },
+  "817": { region: "Jawa Timur", city: "Malang" },
+  "818": { region: "Jawa Timur", city: "Surabaya" },
+  "819": { region: "Jawa Barat", city: "Jakarta" },
+  "821": { region: "Sumatra Utara", city: "Medan" },
+  "822": { region: "Sumatra Utara", city: "Medan" },
+  "823": { region: "Sumatra Barat", city: "Padang" },
+  "824": { region: "Sumatra Selatan", city: "Palembang" },
+  "825": { region: "Riau", city: "Pekanbaru" },
+  "826": { region: "Jambi", city: "Jambi" },
+  "827": { region: "Bengkulu", city: "Bengkulu" },
+  "828": { region: "Lampung", city: "Lampung" },
+  "829": { region: "Bangka Belitung", city: "Pangkal Pinang" },
+  "831": { region: "Kalimantan Barat", city: "Pontianak" },
+  "832": { region: "Kalimantan Tengah", city: "Palangka Raya" },
+  "833": { region: "Kalimantan Selatan", city: "Banjarmasin" },
+  "834": { region: "Kalimantan Timur", city: "Samarinda" },
+  "835": { region: "Kalimantan Utara", city: "Tarakan" },
+  "836": { region: "Sulawesi Utara", city: "Manado" },
+  "837": { region: "Sulawesi Tengah", city: "Palu" },
+  "838": { region: "Sulawesi Selatan", city: "Makassar" },
+  "839": { region: "Sulawesi Tenggara", city: "Kendari" },
+  "851": { region: "Bali", city: "Denpasar" },
+  "852": { region: "Nusa Tenggara Timur", city: "Kupang" },
+  "853": { region: "Nusa Tenggara Barat", city: "Mataram" },
+  "854": { region: "Papua", city: "Jayapura" },
+  "855": { region: "Papua Barat", city: "Manokwari" },
+  "856": { region: "Maluku", city: "Ambon" },
+  "857": { region: "Maluku Utara", city: "Ternate" },
+  "858": { region: "Gorontalo", city: "Gorontalo" },
+  "859": { region: "Sulawesi Barat", city: "Mamuju" }
+};
+
 function estimateLocation(number) {
-  const countryCode = countries
+  const country = countries
     .slice()
     .sort((a, b) => b.code.length - a.code.length)
     .find(item => number.startsWith(item.code));
 
-  if (!countryCode) {
-    return "Wilayah belum dapat dipastikan";
-  }
+  if (!country) return "Tidak diketahui";
 
-  if (countryCode.code === "62") {
+  if (country.code === "62") {
     const national = number.slice(2);
-
-    if (/^8[1-3]/.test(national)) return "Estimasi wilayah: Pulau Jawa";
-    if (/^8[4-7]/.test(national)) return "Estimasi wilayah: Sumatra / Kalimantan / Bali";
-    if (/^8[8]/.test(national)) return "Estimasi wilayah: Sulawesi / Papua";
-    return "Estimasi wilayah: Indonesia (umum)";
+    const areaCode3 = national.slice(0, 3);
+    const areaCode2 = national.slice(0, 2);
+    
+    // Try 3-digit area code first (more specific)
+    if (indonesiaAreaCodes[areaCode3]) {
+      const loc = indonesiaAreaCodes[areaCode3];
+      return `${loc.city}, ${loc.region}`;
+    }
+    
+    // Fallback to 2-digit area code
+    const basicCode = areaCode2;
+    if (basicCode === "81") return "Jawa Tengah";
+    if (basicCode === "82") return "Jawa Barat / Jakarta";
+    if (basicCode === "83") return "Jawa Timur";
+    if (basicCode === "84") return "Sumatra Utara";
+    if (basicCode === "85") return "Sumatra Barat / Riau";
+    if (basicCode === "86") return "Kalimantan";
+    if (basicCode === "87") return "Sulawesi";
+    if (basicCode === "88") return "Papua / Maluku";
+    if (basicCode === "89") return "Bali / Nusa Tenggara";
+    
+    return "Indonesia";
   }
 
-  if (countryCode.code === "60") {
-    return "Estimasi wilayah: Malaysia";
-  }
-
-  if (countryCode.code === "65") {
-    return "Estimasi wilayah: Singapura";
-  }
-
-  if (countryCode.code === "63") {
-    return "Estimasi wilayah: Filipina";
-  }
-
-  if (countryCode.code === "66") {
-    return "Estimasi wilayah: Thailand";
-  }
-
-  if (countryCode.code === "84") {
-    return "Estimasi wilayah: Vietnam";
-  }
-
-  if (countryCode.code === "1") {
-    return "Estimasi wilayah: Amerika Serikat / Kanada";
-  }
-
-  return "Estimasi wilayah: " + countryCode.name;
+  if (country.code === "60") return "Malaysia";
+  if (country.code === "65") return "Singapura";
+  if (country.code === "63") return "Filipina";
+  if (country.code === "66") return "Thailand";
+  if (country.code === "84") return "Vietnam";
+  if (country.code === "1") return "USA / Kanada";
+  
+  return country.name;
 }
 
 // Normalisasi format umum nomor telepon.
@@ -122,7 +160,7 @@ function inspectNumber(number) {
   let plausible = true;
   let explanation =
     "Hasil berasal dari pola nomor. Ini tidak memverifikasi nomor aktif, " +
-    "identitas pemilik, operator, atau lokasi GPS yang akurat.";
+    "identitas pemilik, operator, atau lokasi GPS.";
 
   if (country && country.code === "62") {
     const national = number.slice(2);
@@ -279,7 +317,11 @@ form.addEventListener("submit", event => {
   document.getElementById("country").textContent = result.countryName;
   document.getElementById("callingCode").textContent =
     "Kode panggilan: " + result.callingCode;
-  document.getElementById("location").textContent = result.location;
+  
+  const locationEl = document.getElementById("location");
+  if (locationEl) {
+    locationEl.textContent = result.location;
+  }
 
   document.getElementById("numberType").textContent = result.type;
   document.getElementById("numberTypeDetail").textContent = result.detail;
