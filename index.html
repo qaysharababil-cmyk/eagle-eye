@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1220">
+  <title>Phone Lookup — Pencarian Nomor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="navbar">
+    <a href="#" class="brand">
+      <span class="brand-icon">⌕</span>
+      <span>Phone<span class="accent">Lookup</span></span>
+    </a>
+    <span class="status"><span class="dot"></span> TOOL ONLINE</span>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="eyebrow">PHONE NUMBER TOOLKIT</div>
+      <h1>Kenali nomor<br><span class="gradient">lebih mudah.</span></h1>
+      <p class="subtitle">
+        Periksa format nomor telepon, kode negara, dan informasi
+        dasar nomor dalam satu tempat.
+      </p>
+
+      <form id="lookupForm" class="search-card">
+        <label for="phoneInput">NOMOR TELEPON</label>
+        <div class="input-wrap">
+          <span class="phone-icon">＋</span>
+          <input
+            type="tel"
+            id="phoneInput"
+            placeholder="Contoh: 081234567890"
+            autocomplete="tel"
+            required
+          >
+          <button type="button" id="clearBtn" class="clear-btn"
+            aria-label="Hapus nomor">×</button>
+        </div>
+        <p class="hint">Bisa memakai format 08..., 62..., atau +62...</p>
+        <button class="search-btn" type="submit">
+          <span>Periksa Nomor</span>
+          <span>→</span>
+        </button>
+        <p id="error" class="error" role="alert"></p>
+      </form>
+    </section>
+
+    <section id="resultSection" class="result-section hidden"
+      aria-live="polite">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">HASIL PEMERIKSAAN</div>
+          <h2>Informasi nomor</h2>
+        </div>
+        <span class="result-badge">Selesai</span>
+      </div>
+
+      <div class="number-card">
+        <div class="number-icon">☎</div>
+        <div class="number-info">
+          <span class="muted">Nomor yang diperiksa</span>
+          <h3 id="formattedNumber">—</h3>
+          <span id="validity" class="validity">—</span>
+        </div>
+        <button id="copyBtn" class="icon-btn" type="button"
+          aria-label="Salin nomor">▢</button>
+      </div>
+
+      <div class="info-grid">
+        <article class="info-card">
+          <span class="info-icon">🌐</span>
+          <span class="muted">Negara / wilayah</span>
+          <strong id="country">—</strong>
+          <small id="callingCode">—</small>
+        </article>
+        <article class="info-card">
+          <span class="info-icon">📱</span>
+          <span class="muted">Kategori nomor</span>
+          <strong id="numberType">—</strong>
+          <small id="numberTypeDetail">Berdasarkan pola sederhana</small>
+        </article>
+      </div>
+
+      <div class="notice">
+        <span>ⓘ</span>
+        <p id="explanation">
+          Hasil ini hanya berdasarkan pola nomor, bukan data operator
+          atau lokasi GPS.
+        </p>
+      </div>
+
+      <button id="whatsappBtn" class="secondary-btn" type="button">
+        Buka nomor di WhatsApp ↗
+      </button>
+      <p class="hint">WhatsApp hanya akan terbuka jika nomor dapat digunakan
+        di layanan tersebut. Keberadaan akun tidak dijamin.</p>
+    </section>
+
+    <section class="history-section">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">AKTIVITAS</div>
+          <h2>Pencarian terakhir</h2>
+        </div>
+        <button id="clearHistoryBtn" class="text-btn" type="button">
+          Hapus riwayat
+        </button>
+      </div>
+      <div id="historyList" class="history-list">
+        <div class="empty-state">
+          <span>◷</span>
+          <p>Belum ada pencarian.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="privacy-card">
+      <span class="privacy-icon">🔒</span>
+      <div>
+        <strong>Privasi tetap penting</strong>
+        <p>Nomor yang diperiksa diproses di browser. Riwayat disimpan
+          di perangkat ini sampai kamu menghapusnya. Website ini
+          tidak mencari identitas pribadi atau lokasi seseorang.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="brand footer-brand">⌕ Phone<span class="accent">Lookup</span></div>
+    <p>Informasi nomor, dengan batasan yang jelas.</p>
+    <small>Project edukasi · Tidak terafiliasi dengan operator telepon.</small>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
