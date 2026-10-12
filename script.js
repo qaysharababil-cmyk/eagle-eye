@@ -32,6 +32,52 @@ const countries = [
   { code: "1", name: "Amerika Serikat / Kanada dan wilayah NANP" }
 ];
 
+function estimateLocation(number) {
+  const countryCode = countries
+    .slice()
+    .sort((a, b) => b.code.length - a.code.length)
+    .find(item => number.startsWith(item.code));
+
+  if (!countryCode) {
+    return "Wilayah belum dapat dipastikan";
+  }
+
+  if (countryCode.code === "62") {
+    const national = number.slice(2);
+
+    if (/^8[1-3]/.test(national)) return "Estimasi wilayah: Pulau Jawa";
+    if (/^8[4-7]/.test(national)) return "Estimasi wilayah: Sumatra / Kalimantan / Bali";
+    if (/^8[8]/.test(national)) return "Estimasi wilayah: Sulawesi / Papua";
+    return "Estimasi wilayah: Indonesia (umum)";
+  }
+
+  if (countryCode.code === "60") {
+    return "Estimasi wilayah: Malaysia";
+  }
+
+  if (countryCode.code === "65") {
+    return "Estimasi wilayah: Singapura";
+  }
+
+  if (countryCode.code === "63") {
+    return "Estimasi wilayah: Filipina";
+  }
+
+  if (countryCode.code === "66") {
+    return "Estimasi wilayah: Thailand";
+  }
+
+  if (countryCode.code === "84") {
+    return "Estimasi wilayah: Vietnam";
+  }
+
+  if (countryCode.code === "1") {
+    return "Estimasi wilayah: Amerika Serikat / Kanada";
+  }
+
+  return "Estimasi wilayah: " + countryCode.name;
+}
+
 // Normalisasi format umum nomor telepon.
 function normalizeNumber(value) {
   let number = value.trim();
@@ -70,12 +116,13 @@ function inspectNumber(number) {
 
   let countryName = country ? country.name : "Tidak dikenali";
   let callingCode = country ? "+" + country.code : "Belum diketahui";
+  let location = estimateLocation(number);
   let type = "Belum dapat dipastikan";
   let detail = "Pola umum saja";
   let plausible = true;
   let explanation =
     "Hasil berasal dari pola nomor. Ini tidak memverifikasi nomor aktif, " +
-    "identitas pemilik, operator, atau lokasi GPS.";
+    "identitas pemilik, operator, atau lokasi GPS yang akurat.";
 
   if (country && country.code === "62") {
     const national = number.slice(2);
@@ -106,6 +153,7 @@ function inspectNumber(number) {
   return {
     countryName,
     callingCode,
+    location,
     type,
     detail,
     plausible,
@@ -231,6 +279,7 @@ form.addEventListener("submit", event => {
   document.getElementById("country").textContent = result.countryName;
   document.getElementById("callingCode").textContent =
     "Kode panggilan: " + result.callingCode;
+  document.getElementById("location").textContent = result.location;
 
   document.getElementById("numberType").textContent = result.type;
   document.getElementById("numberTypeDetail").textContent = result.detail;
