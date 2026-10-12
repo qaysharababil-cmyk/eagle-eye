@@ -8,6 +8,7 @@
   --blue: #55b9ff;
   --cyan: #8be9ff;
   --green: #65e6ae;
+  --orange: #ffb84d;
 }
 
 * {
@@ -330,11 +331,11 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 5px;
+  gap: 8px;
 }
 
 .info-icon {
-  margin-bottom: 7px;
+  margin-bottom: 3px;
   font-size: 21px;
 }
 
@@ -346,11 +347,13 @@ h2 {
 .info-card small {
   color: var(--muted);
   font-size: 11px;
+  line-height: 1.4;
 }
 
-.info-card small + small {
-  margin-top: -1px;
-  color: #c7d7ed;
+#location {
+  color: var(--orange) !important;
+  font-weight: 600;
+  margin-top: 4px;
 }
 
 .notice {
