@@ -32,45 +32,102 @@ const countries = [
   { code: "1", name: "Amerika Serikat / Kanada dan wilayah NANP" }
 ];
 
-// Detailed Indonesia region mapping by area code
+// Detailed Indonesia area codes with coordinates
 const indonesiaAreaCodes = {
-  "811": { region: "Jawa Tengah", city: "Semarang" },
-  "812": { region: "Jawa Barat", city: "Bandung / Jakarta" },
-  "813": { region: "Jawa Timur", city: "Surabaya" },
-  "814": { region: "Jawa Barat", city: "Bandung" },
-  "815": { region: "Jawa Barat", city: "Bekasi" },
-  "816": { region: "Jawa Tengah", city: "Yogyakarta" },
-  "817": { region: "Jawa Timur", city: "Malang" },
-  "818": { region: "Jawa Timur", city: "Surabaya" },
-  "819": { region: "Jawa Barat", city: "Jakarta" },
-  "821": { region: "Sumatra Utara", city: "Medan" },
-  "822": { region: "Sumatra Utara", city: "Medan" },
-  "823": { region: "Sumatra Barat", city: "Padang" },
-  "824": { region: "Sumatra Selatan", city: "Palembang" },
-  "825": { region: "Riau", city: "Pekanbaru" },
-  "826": { region: "Jambi", city: "Jambi" },
-  "827": { region: "Bengkulu", city: "Bengkulu" },
-  "828": { region: "Lampung", city: "Lampung" },
-  "829": { region: "Bangka Belitung", city: "Pangkal Pinang" },
-  "831": { region: "Kalimantan Barat", city: "Pontianak" },
-  "832": { region: "Kalimantan Tengah", city: "Palangka Raya" },
-  "833": { region: "Kalimantan Selatan", city: "Banjarmasin" },
-  "834": { region: "Kalimantan Timur", city: "Samarinda" },
-  "835": { region: "Kalimantan Utara", city: "Tarakan" },
-  "836": { region: "Sulawesi Utara", city: "Manado" },
-  "837": { region: "Sulawesi Tengah", city: "Palu" },
-  "838": { region: "Sulawesi Selatan", city: "Makassar" },
-  "839": { region: "Sulawesi Tenggara", city: "Kendari" },
-  "851": { region: "Bali", city: "Denpasar" },
-  "852": { region: "Nusa Tenggara Timur", city: "Kupang" },
-  "853": { region: "Nusa Tenggara Barat", city: "Mataram" },
-  "854": { region: "Papua", city: "Jayapura" },
-  "855": { region: "Papua Barat", city: "Manokwari" },
-  "856": { region: "Maluku", city: "Ambon" },
-  "857": { region: "Maluku Utara", city: "Ternate" },
-  "858": { region: "Gorontalo", city: "Gorontalo" },
-  "859": { region: "Sulawesi Barat", city: "Mamuju" }
+  "811": { city: "Semarang", region: "Jawa Tengah", lat: -7.250445, lng: 110.406258 },
+  "812": { city: "Bandung", region: "Jawa Barat", lat: -6.903540, lng: 107.615273 },
+  "813": { city: "Surabaya", region: "Jawa Timur", lat: -7.257472, lng: 112.752088 },
+  "814": { city: "Bandung", region: "Jawa Barat", lat: -6.903540, lng: 107.615273 },
+  "815": { city: "Bekasi", region: "Jawa Barat", lat: -6.238913, lng: 106.982971 },
+  "816": { city: "Yogyakarta", region: "Jawa Tengah", lat: -7.797068, lng: 110.370529 },
+  "817": { city: "Malang", region: "Jawa Timur", lat: -7.983908, lng: 112.631381 },
+  "818": { city: "Surabaya", region: "Jawa Timur", lat: -7.257472, lng: 112.752088 },
+  "819": { city: "Jakarta", region: "DKI Jakarta", lat: -6.174465, lng: 106.829235 },
+  "821": { city: "Medan", region: "Sumatra Utara", lat: 2.194810, lng: 98.669448 },
+  "822": { city: "Medan", region: "Sumatra Utara", lat: 2.194810, lng: 98.669448 },
+  "823": { city: "Padang", region: "Sumatra Barat", lat: -0.949110, lng: 100.418486 },
+  "824": { city: "Palembang", region: "Sumatra Selatan", lat: -2.915710, lng: 104.746701 },
+  "825": { city: "Pekanbaru", region: "Riau", lat: 0.527760, lng: 101.437854 },
+  "826": { city: "Jambi", region: "Jambi", lat: -1.590007, lng: 103.610829 },
+  "827": { city: "Bengkulu", region: "Bengkulu", lat: -3.786889, lng: 102.267578 },
+  "828": { city: "Lampung", region: "Lampung", lat: -5.389555, lng: 105.267235 },
+  "829": { city: "Pangkal Pinang", region: "Bangka Belitung", lat: -2.132650, lng: 106.130310 },
+  "831": { city: "Pontianak", region: "Kalimantan Barat", lat: 0.015194, lng: 109.333130 },
+  "832": { city: "Palangka Raya", region: "Kalimantan Tengah", lat: -1.974160, lng: 114.034822 },
+  "833": { city: "Banjarmasin", region: "Kalimantan Selatan", lat: -3.326520, lng: 114.590711 },
+  "834": { city: "Samarinda", region: "Kalimantan Timur", lat: 0.495310, lng: 117.141129 },
+  "835": { city: "Tarakan", region: "Kalimantan Utara", lat: 3.298316, lng: 117.631367 },
+  "836": { city: "Manado", region: "Sulawesi Utara", lat: 1.502443, lng: 124.842675 },
+  "837": { city: "Palu", region: "Sulawesi Tengah", lat: -0.897691, lng: 119.840523 },
+  "838": { city: "Makassar", region: "Sulawesi Selatan", lat: -5.135399, lng: 119.423389 },
+  "839": { city: "Kendari", region: "Sulawesi Tenggara", lat: -3.963243, lng: 122.504772 },
+  "851": { city: "Denpasar", region: "Bali", lat: -8.670458, lng: 115.212603 },
+  "852": { city: "Kupang", region: "Nusa Tenggara Timur", lat: -10.169625, lng: 123.613953 },
+  "853": { city: "Mataram", region: "Nusa Tenggara Barat", lat: -8.590067, lng: 116.127154 },
+  "854": { city: "Jayapura", region: "Papua", lat: -2.491687, lng: 140.714993 },
+  "855": { city: "Manokwari", region: "Papua Barat", lat: -0.866497, lng: 134.082230 },
+  "856": { city: "Ambon", region: "Maluku", lat: -3.695196, lng: 128.192100 },
+  "857": { city: "Ternate", region: "Maluku Utara", lat: 0.793635, lng: 127.378250 },
+  "858": { city: "Gorontalo", region: "Gorontalo", lat: 0.534269, lng: 123.055392 },
+  "859": { city: "Mamuju", region: "Sulawesi Barat", lat: -2.669591, lng: 118.844082 }
 };
+
+// Country center coordinates for fallback
+const countryCoordinates = {
+  "62": { name: "Indonesia", lat: -2.548926, lng: 113.921327 },
+  "60": { name: "Malaysia", lat: 4.210484, lng: 101.686855 },
+  "65": { name: "Singapura", lat: 1.352083, lng: 103.819836 },
+  "63": { name: "Filipina", lat: 12.879721, lng: 121.774017 },
+  "66": { name: "Thailand", lat: 15.870032, lng: 100.992541 },
+  "84": { name: "Vietnam", lat: 14.058324, lng: 108.277199 },
+  "91": { name: "India", lat: 20.593684, lng: 78.962880 },
+  "92": { name: "Pakistan", lat: 30.375321, lng: 69.345116 },
+  "1": { name: "USA", lat: 37.09024, lng: -95.71289 }
+};
+
+function getLocationCoordinates(number) {
+  const country = countries
+    .slice()
+    .sort((a, b) => b.code.length - a.code.length)
+    .find(item => number.startsWith(item.code));
+
+  if (!country) {
+    return { name: "Tidak diketahui", lat: 0, lng: 0 };
+  }
+
+  if (country.code === "62") {
+    const national = number.slice(2);
+    const areaCode3 = national.slice(0, 3);
+    
+    if (indonesiaAreaCodes[areaCode3]) {
+      const loc = indonesiaAreaCodes[areaCode3];
+      return { name: `${loc.city}, ${loc.region}`, lat: loc.lat, lng: loc.lng };
+    }
+    
+    // Fallback to Indonesia center
+    return { name: "Indonesia", lat: -2.548926, lng: 113.921327 };
+  }
+
+  // Use country center for other countries
+  if (countryCoordinates[country.code]) {
+    const coord = countryCoordinates[country.code];
+    return { name: coord.name, lat: coord.lat, lng: coord.lng };
+  }
+
+  return { name: country.name, lat: 0, lng: 0 };
+}
+
+function updateMap(lat, lng, name) {
+  const mapFrame = document.getElementById("mapFrame");
+  if (!mapFrame) return;
+
+  // Calculate bounding box for OSM embed
+  const zoomLevel = name.includes(",") ? "11" : "5"; // More zoom for cities
+  const bbox = `${lng - 0.5},${lat - 0.5},${lng + 0.5},${lat + 0.5}`;
+  
+  const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lng}`;
+  mapFrame.src = mapUrl;
+}
 
 function estimateLocation(number) {
   const country = countries
@@ -83,25 +140,11 @@ function estimateLocation(number) {
   if (country.code === "62") {
     const national = number.slice(2);
     const areaCode3 = national.slice(0, 3);
-    const areaCode2 = national.slice(0, 2);
     
-    // Try 3-digit area code first (more specific)
     if (indonesiaAreaCodes[areaCode3]) {
       const loc = indonesiaAreaCodes[areaCode3];
       return `${loc.city}, ${loc.region}`;
     }
-    
-    // Fallback to 2-digit area code
-    const basicCode = areaCode2;
-    if (basicCode === "81") return "Jawa Tengah";
-    if (basicCode === "82") return "Jawa Barat / Jakarta";
-    if (basicCode === "83") return "Jawa Timur";
-    if (basicCode === "84") return "Sumatra Utara";
-    if (basicCode === "85") return "Sumatra Barat / Riau";
-    if (basicCode === "86") return "Kalimantan";
-    if (basicCode === "87") return "Sulawesi";
-    if (basicCode === "88") return "Papua / Maluku";
-    if (basicCode === "89") return "Bali / Nusa Tenggara";
     
     return "Indonesia";
   }
@@ -131,10 +174,8 @@ function normalizeNumber(value) {
   if (number.startsWith("00")) {
     number = number.slice(2);
   } else if (!hasPlus && number.startsWith("0")) {
-    // Konversi format lokal Indonesia, misalnya 0812... menjadi 62812...
     number = "62" + number.slice(1);
   } else if (!hasPlus && number.startsWith("8")) {
-    // Memungkinkan format Indonesia tanpa angka nol di depan.
     number = "62" + number;
   }
 
@@ -179,7 +220,6 @@ function inspectNumber(number) {
     type = plausible ? "Kemungkinan nomor NANP" : "Pola belum dikenali";
     detail = "AS, Kanada, dan wilayah terkait";
   } else if (country) {
-    // Kode negara diketahui, tetapi tipe dan validitas belum diverifikasi.
     type = "Nomor internasional";
     detail = "Negara berdasarkan kode panggilan";
   } else {
@@ -220,7 +260,6 @@ function saveHistory(number) {
     time: new Date().toISOString()
   });
 
-  // Simpan maksimal 5 pencarian terakhir.
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(history.slice(0, 5)));
   } catch {
@@ -305,6 +344,7 @@ form.addEventListener("submit", event => {
   }
 
   const result = inspectNumber(number);
+  const locationCoord = getLocationCoordinates(number);
   currentNumber = number;
 
   document.getElementById("formattedNumber").textContent =
@@ -326,6 +366,9 @@ form.addEventListener("submit", event => {
   document.getElementById("numberType").textContent = result.type;
   document.getElementById("numberTypeDetail").textContent = result.detail;
   document.getElementById("explanation").textContent = result.explanation;
+
+  // Update map
+  updateMap(locationCoord.lat, locationCoord.lng, locationCoord.name);
 
   resultSection.classList.remove("hidden");
   saveHistory(number);
@@ -356,8 +399,6 @@ document.getElementById("copyBtn").addEventListener("click", async () => {
 document.getElementById("whatsappBtn").addEventListener("click", () => {
   if (!currentNumber) return;
 
-  // Membuka WhatsApp dengan nomor tujuan.
-  // Ini tidak memeriksa keberadaan akun atau identitas pemilik.
   window.open(
     "https://wa.me/" + encodeURIComponent(currentNumber),
     "_blank",
