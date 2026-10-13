@@ -145,16 +145,16 @@
       margin-bottom: 10px;
     }
 
-    input {
+    input, select {
       width: 100%;
       border: 1px solid rgba(148, 163, 184, 0.28);
       background: rgba(15, 23, 42, 0.9);
       color: var(--text);
       border-radius: 14px;
-      padding: 16px 18px;
+      padding: 12px 14px;
       outline: none;
       font-size: 1rem;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     input:focus {
@@ -166,7 +166,7 @@
       width: 100%;
       border: none;
       border-radius: 14px;
-      padding: 16px 18px;
+      padding: 12px 14px;
       font-weight: 700;
       font-size: 1rem;
       cursor: pointer;
@@ -324,8 +324,11 @@
       </section>
 
       <section class="panel search-panel">
-        <label class="field-label" for="parentToken">Parent token</label>
-        <input id="parentToken" type="text" placeholder="Paste your parent token" />
+        <label class="field-label" for="serverUrl">Server URL</label>
+        <input id="serverUrl" type="text" value="http://localhost:3000" placeholder="http://localhost:3000 or https://your-server.example" />
+
+        <label class="field-label" for="parentPassword">System password</label>
+        <input id="parentPassword" type="password" value="300309" />
 
         <label class="field-label" for="childPhone">Child phone number</label>
         <input id="childPhone" type="text" placeholder="Example: +1234567890" />
@@ -341,7 +344,7 @@
           <div class="eyebrow" style="margin-bottom: 8px;">Location result</div>
           <h2 id="childName" style="margin: 0;">—</h2>
         </div>
-        <span class="badge" id="statusBadge">Safe</span>
+        <span class="badge" id="statusBadge">—</span>
       </div>
 
       <div class="stat-grid">
@@ -373,30 +376,6 @@
   </div>
 
   <script>
-    const locationData = {
-      '+1234567890': {
-        name: 'Aisha',
-        status: 'Checked in safely',
-        lat: 40.7128,
-        lon: -74.0060,
-        updated: '2026-10-12 09:45 AM'
-      },
-      '+19876543210': {
-        name: 'Noah',
-        status: 'At school',
-        lat: 34.0522,
-        lon: -118.2437,
-        updated: '2026-10-12 08:30 AM'
-      },
-      '+15550199': {
-        name: 'Leah',
-        status: 'At home',
-        lat: 51.5074,
-        lon: -0.1278,
-        updated: '2026-10-12 07:55 AM'
-      }
-    };
-
     const lookupBtn = document.getElementById('lookupBtn');
     const errorEl = document.getElementById('error');
     const resultCard = document.getElementById('resultCard');
@@ -408,42 +387,67 @@
     const mapFrame = document.getElementById('mapFrame');
     const mapsLink = document.getElementById('mapsLink');
 
-    lookupBtn.addEventListener('click', function () {
-      const parentToken = document.getElementById('parentToken').value.trim();
-      const childPhone = document.getElementById('childPhone').value.trim();
+    function showError(msg) {
+      errorEl.textContent = msg;
+      resultCard.classList.remove('visible');
+    }
 
-      if (!parentToken) {
-        errorEl.textContent = 'Please enter a valid parent token.';
-        resultCard.classList.remove('visible');
-        return;
-      }
-
-      if (!childPhone) {
-        errorEl.textContent = 'Please enter the child phone number.';
-        resultCard.classList.remove('visible');
-        return;
-      }
-
-      const data = locationData[childPhone];
-
-      if (!data) {
-        errorEl.textContent = 'No paired child record was found for that phone number.';
-        resultCard.classList.remove('visible');
-        return;
-      }
-
+    function showResult(data) {
       errorEl.textContent = '';
-      childName.textContent = data.name;
-      statusBadge.textContent = data.status;
-      latEl.textContent = data.lat;
-      lonEl.textContent = data.lon;
-      updatedEl.textContent = data.updated;
+      childName.textContent = data.name || data.phone || 'Unknown';
+      statusBadge.textContent = data.status || 'Last known';
+      latEl.textContent = data.location?.lat ?? '-';
+      lonEl.textContent = data.location?.lon ?? '-';
+      updatedEl.textContent = data.location?.ts ? new Date(data.location.ts).toLocaleString() : '-';
 
-      const mapUrl = `https://www.google.com/maps?q=${data.lat},${data.lon}&z=16&output=embed`;
-      mapFrame.src = mapUrl;
-      mapsLink.href = `https://www.google.com/maps?q=${data.lat},${data.lon}`;
+      if (data.location && data.location.lat && data.location.lon) {
+        const lat = Number(data.location.lat);
+        const lon = Number(data.location.lon);
+        mapFrame.src = `https://www.google.com/maps?q=${lat},${lon}&z=16&output=embed`;
+        mapsLink.href = `https://www.google.com/maps?q=${lat},${lon}`;
+      }
 
       resultCard.classList.add('visible');
+    }
+
+    lookupBtn.addEventListener('click', async () => {
+      const server = document.getElementById('serverUrl').value.trim();
+      const password = document.getElementById('parentPassword').value.trim();
+      const phone = document.getElementById('childPhone').value.trim();
+
+      if (!server) return showError('Set the server URL first (e.g. http://localhost:3000)');
+      if (!password) return showError('Enter the system password');
+      if (!phone) return showError('Enter the child phone number');
+
+      showError('Checking...');
+
+      try {
+        const url = new URL('/api/get-location', server);
+        url.searchParams.set('phone', phone);
+
+        const resp = await fetch(url.toString(), {
+          headers: { 'Authorization': 'Bearer ' + password }
+        });
+
+        const json = await resp.json().catch(() => null);
+        if (!resp.ok) {
+          const msg = (json && json.error) ? json.error : `Server returned ${resp.status}`;
+          return showError('Lookup failed: ' + msg);
+        }
+
+        // When master password is used, server returns { ok:true, phone, location }
+        // We augment with optional name/status fields if present.
+        const out = {
+          name: json.name || json.phone,
+          phone: json.phone,
+          status: json.status || 'Last known',
+          location: json.location
+        };
+
+        showResult(out);
+      } catch (err) {
+        showError('Network or server error: ' + (err.message || err));
+      }
     });
   </script>
 </body>
