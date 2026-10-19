@@ -67,3 +67,72 @@
   </script>
 </body>
 </html>
+<!-- public/child.html -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Child Reporter (Demo)</title>
+  <style>body{font-family:Arial;padding:18px}label{display:block;margin-top:8px}input,button{width:100%;padding:10px;margin:8px 0}</style>
+</head>
+<body>
+  <h2>Child: Pair & Share Location (Demo)</h2>
+  <p>Enter the pairing code provided by the parent and allow location sharing (consent required).</p>
+
+  <label for="code">Pairing code</label>
+  <input id="code" placeholder="e.g. ab12cd" />
+  <button id="register">Register device & start sharing</button>
+  <p id="status" style="color:#333"></p>
+
+  <script>
+    let deviceToken = null;
+
+    async function register(pair) {
+      deviceToken = 'dev-' + Math.random().toString(36).slice(2,12);
+      const res = await fetch('/api/register-device', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ pairingCode: pair, deviceToken })
+      });
+      return res.json();
+    }
+
+    async function report(lat, lon) {
+      await fetch('/api/report-location', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ deviceToken, lat, lon, ts: Date.now() })
+      });
+    }
+
+    document.getElementById('register').addEventListener('click', async () => {
+      const code = document.getElementById('code').value.trim();
+      if (!code) return alert('Enter pairing code');
+
+      const j = await register(code);
+      if (!j.ok) { alert('Register failed: ' + (j.error||JSON.stringify(j))); return; }
+      document.getElementById('status').textContent = 'Registered for ' + j.phone + '. Sending location...';
+
+      if (!navigator.geolocation) { alert('Geolocation not supported'); return; }
+
+      async function sendOnce() {
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+          try {
+            await report(pos.coords.latitude, pos.coords.longitude);
+            document.getElementById('status').textContent = 'Location sent at ' + new Date().toLocaleTimeString();
+          } catch (err) {
+            document.getElementById('status').textContent = 'Report failed: ' + (err.message || err);
+          }
+        }, (err) => {
+          document.getElementById('status').textContent = 'Location denied: ' + err.message;
+        }, { enableHighAccuracy: true, timeout: 20000, maximumAge: 5000 });
+      }
+
+      // send immediately and every 30s
+      sendOnce();
+      setInterval(sendOnce, 30000);
+    });
+  </script>
+</body>
+</html>
