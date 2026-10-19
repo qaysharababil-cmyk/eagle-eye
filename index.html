@@ -1,452 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- public/parent.html -->
+<!doctype html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0b1220">
-  <title>Family Location Check-In</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Parent Lookup (Demo)</title>
   <style>
-    :root {
-      --bg: #07111f;
-      --bg-soft: #0f1d2d;
-      --panel: #111f2f;
-      --panel-soft: #13263f;
-      --text: #eaf3ff;
-      --muted: #9ab0c7;
-      --primary: #67e8f9;
-      --green: #34d399;
-      --red: #f87171;
-      --line: rgba(255,255,255,.08);
-      --shadow: 0 18px 40px rgba(0,0,0,.25);
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(135deg, #040b16 0%, #0b1220 50%, #0f1d2d 100%);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    .container {
-      max-width: 980px;
-      margin: 48px auto;
-      padding: 0 20px 40px;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 30px;
-      padding: 12px 18px;
-      background: rgba(17, 31, 47, .88);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      letter-spacing: .04em;
-      color: var(--text);
-      text-decoration: none;
-    }
-
-    .brand-mark {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, var(--primary), #3b82f6);
-      color: #02131d;
-      font-weight: 900;
-    }
-
-    .status-pill {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(52, 211, 153, 0.1);
-      border: 1px solid rgba(52, 211, 153, 0.25);
-      color: var(--green);
-      font-size: 0.8rem;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 26px;
-      align-items: stretch;
-      margin-bottom: 26px;
-    }
-
-    .panel {
-      background: rgba(17, 31, 47, .9);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      padding: 28px;
-    }
-
-    .eyebrow {
-      color: var(--primary);
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      font-size: 0.72rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-    }
-
-    h1 {
-      font-size: clamp(2.4rem, 4vw, 4rem);
-      line-height: 1.04;
-      margin: 0 0 16px;
-      letter-spacing: -0.06em;
-    }
-
-    .gradient-text {
-      background: linear-gradient(135deg, var(--primary), #7dd3fc 45%, #a78bfa);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .subtitle {
-      color: var(--muted);
-      font-size: 1.02rem;
-      line-height: 1.7;
-      margin: 0;
-      max-width: 560px;
-    }
-
-    .search-panel {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .field-label {
-      display: block;
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    input, select {
-      width: 100%;
-      border: 1px solid rgba(148, 163, 184, 0.28);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text);
-      border-radius: 14px;
-      padding: 12px 14px;
-      outline: none;
-      font-size: 1rem;
-      margin-bottom: 12px;
-    }
-
-    input:focus {
-      border-color: rgba(103, 232, 249, 0.8);
-      box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.12);
-    }
-
-    .btn {
-      width: 100%;
-      border: none;
-      border-radius: 14px;
-      padding: 12px 14px;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: transform 0.2s ease, filter 0.2s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-    }
-
-    .primary-btn {
-      background: linear-gradient(135deg, var(--green), #22c55e);
-      color: #062b12;
-    }
-
-    .error {
-      min-height: 22px;
-      margin: 12px 0 0;
-      color: #ffc4c4;
-      font-size: 0.92rem;
-    }
-
-    .notice {
-      border: 1px solid rgba(103, 232, 249, 0.28);
-      background: rgba(103, 232, 249, 0.06);
-      border-radius: 14px;
-      padding: 14px 16px;
-      color: #dff9ff;
-      line-height: 1.6;
-      margin-top: 16px;
-    }
-
-    .result-card {
-      display: none;
-      margin-top: 18px;
-      padding: 18px;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(19, 38, 63, 0.9);
-      box-shadow: var(--shadow);
-    }
-
-    .result-card.visible {
-      display: block;
-    }
-
-    .result-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: center;
-      margin-bottom: 18px;
-    }
-
-    .badge {
-      background: rgba(52, 211, 153, 0.12);
-      color: var(--green);
-      border: 1px solid rgba(52, 211, 153, 0.25);
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 0.72rem;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin: 16px 0;
-    }
-
-    .stat {
-      background: rgba(8, 15, 28, 0.55);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 16px;
-    }
-
-    .small-label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      color: var(--muted);
-    }
-
-    .big-value {
-      font-size: clamp(1.1rem, 2vw, 1.9rem);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-    }
-
-    .map-frame {
-      width: 100%;
-      height: 320px;
-      border: 0;
-      border-radius: 14px;
-      margin-top: 16px;
-      background: #0b1220;
-    }
-
-    .secondary-link {
-      display: inline-block;
-      margin-top: 16px;
-      color: #d9f7ff;
-      text-decoration: none;
-      font-weight: 700;
-    }
-
-    .secondary-link:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 760px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
-      .stat-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
+    body{font-family:Arial;padding:18px;background:#f7fafc}
+    .card{max-width:720px;margin:0 auto;background:#fff;padding:18px;border-radius:10px}
+    label{display:block;margin-top:8px;font-weight:600}
+    input,button{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #dcdcdc}
+    button{background:#16a34a;color:#fff;border:none;font-weight:700;cursor:pointer}
+    #map{height:360px;margin-top:12px;border-radius:8px;border:1px solid #e6eef6}
+    pre{background:#f8fafc;padding:8px;border-radius:8px;white-space:pre-wrap;word-wrap:break-word}
   </style>
 </head>
 <body>
-  <div class="container">
-    <header class="topbar">
-      <a href="#" class="brand">
-        <span class="brand-mark">⌕</span>
-        <span>Family<span style="color: var(--primary);">Locate</span></span>
-      </a>
-      <span class="status-pill">Consent Demo</span>
-    </header>
+  <div class="card">
+    <h2>Parent Lookup (Demo)</h2>
+    <p style="color:#555;margin-top:0">This demo uses a system password (prefilled). Use only with explicit consent.</p>
 
-    <main class="hero">
-      <section class="panel">
-        <div class="eyebrow">Family location</div>
-        <h1>Find a child’s <span class="gradient-text">last known position</span></h1>
-        <p class="subtitle">
-          This page is a consent-based demo for a parent or guardian with permission to check a paired child device.
-          It does not use raw phone-number tracking against an unpaired device.
-        </p>
-        <div class="notice">
-          Secure use only: the device must be paired first, and the lookup should be used only with explicit consent.
-        </div>
-      </section>
+    <label for="password">System password</label>
+    <input id="password" type="password" value="300309" />
 
-      <section class="panel search-panel">
-        <label class="field-label" for="serverUrl">Server URL</label>
-        <input id="serverUrl" type="text" value="http://localhost:3000" placeholder="http://localhost:3000 or https://your-server.example" />
+    <label for="phone">Child phone (exact, used during pairing)</label>
+    <input id="phone" placeholder="+1234567890" />
 
-        <label class="field-label" for="parentPassword">System password</label>
-        <input id="parentPassword" type="password" value="300309" />
+    <button id="btn">Lookup last-known location</button>
 
-        <label class="field-label" for="childPhone">Child phone number</label>
-        <input id="childPhone" type="text" placeholder="Example: +1234567890" />
-
-        <button id="lookupBtn" class="btn primary-btn" type="button">Lookup location</button>
-        <p id="error" class="error" role="alert"></p>
-      </section>
-    </main>
-
-    <section id="resultCard" class="result-card" aria-live="polite">
-      <div class="result-head">
-        <div>
-          <div class="eyebrow" style="margin-bottom: 8px;">Location result</div>
-          <h2 id="childName" style="margin: 0;">—</h2>
-        </div>
-        <span class="badge" id="statusBadge">—</span>
-      </div>
-
-      <div class="stat-grid">
-        <div class="stat">
-          <span class="small-label">Latitude</span>
-          <div class="big-value" id="lat">—</div>
-        </div>
-        <div class="stat">
-          <span class="small-label">Longitude</span>
-          <div class="big-value" id="lon">—</div>
-        </div>
-      </div>
-
-      <div class="stat">
-        <span class="small-label">Last update</span>
-        <div class="big-value" id="updated">—</div>
-      </div>
-
-      <iframe
-        id="mapFrame"
-        class="map-frame"
-        title="Last known location"
-        loading="lazy"
-        src="https://www.google.com/maps?q=0,0&z=2&output=embed">
-      </iframe>
-
-      <a id="mapsLink" class="secondary-link" href="#" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
-    </section>
+    <div id="out" style="display:none;margin-top:14px">
+      <h3>Result</h3>
+      <pre id="json"></pre>
+      <p><strong>Lat:</strong> <span id="lat">-</span> &nbsp; <strong>Lon:</strong> <span id="lon">-</span></p>
+      <iframe id="map" src="https://www.google.com/maps?q=0,0&z=2&output=embed" style="width:100%;height:360px;border:0;border-radius:8px;margin-top:12px"></iframe>
+      <p style="margin-top:8px"><a id="mapsLink" href="#" target="_blank">Open in Google Maps</a></p>
+    </div>
   </div>
 
   <script>
-    const lookupBtn = document.getElementById('lookupBtn');
-    const errorEl = document.getElementById('error');
-    const resultCard = document.getElementById('resultCard');
-    const childName = document.getElementById('childName');
-    const statusBadge = document.getElementById('statusBadge');
-    const latEl = document.getElementById('lat');
-    const lonEl = document.getElementById('lon');
-    const updatedEl = document.getElementById('updated');
-    const mapFrame = document.getElementById('mapFrame');
-    const mapsLink = document.getElementById('mapsLink');
-
-    function showError(msg) {
-      errorEl.textContent = msg;
-      resultCard.classList.remove('visible');
-    }
-
-    function showResult(data) {
-      errorEl.textContent = '';
-      childName.textContent = data.name || data.phone || 'Unknown';
-      statusBadge.textContent = data.status || 'Last known';
-      latEl.textContent = data.location?.lat ?? '-';
-      lonEl.textContent = data.location?.lon ?? '-';
-      updatedEl.textContent = data.location?.ts ? new Date(data.location.ts).toLocaleString() : '-';
-
-      if (data.location && data.location.lat && data.location.lon) {
-        const lat = Number(data.location.lat);
-        const lon = Number(data.location.lon);
-        mapFrame.src = `https://www.google.com/maps?q=${lat},${lon}&z=16&output=embed`;
-        mapsLink.href = `https://www.google.com/maps?q=${lat},${lon}`;
-      }
-
-      resultCard.classList.add('visible');
-    }
-
-    lookupBtn.addEventListener('click', async () => {
-      const server = document.getElementById('serverUrl').value.trim();
-      const password = document.getElementById('parentPassword').value.trim();
-      const phone = document.getElementById('childPhone').value.trim();
-
-      if (!server) return showError('Set the server URL first (e.g. http://localhost:3000)');
-      if (!password) return showError('Enter the system password');
-      if (!phone) return showError('Enter the child phone number');
-
-      showError('Checking...');
+    document.getElementById('btn').addEventListener('click', async () => {
+      const pw = document.getElementById('password').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      if (!pw || !phone) return alert('Enter password and phone');
 
       try {
-        const url = new URL('/api/get-location', server);
-        url.searchParams.set('phone', phone);
-
-        const resp = await fetch(url.toString(), {
-          headers: { 'Authorization': 'Bearer ' + password }
-        });
-
-        const json = await resp.json().catch(() => null);
+        const url = '/api/get-location?phone=' + encodeURIComponent(phone);
+        const resp = await fetch(url, { headers: { 'Authorization': 'Bearer ' + pw } });
+        const data = await resp.json().catch(() => null);
         if (!resp.ok) {
-          const msg = (json && json.error) ? json.error : `Server returned ${resp.status}`;
-          return showError('Lookup failed: ' + msg);
+          alert('Lookup failed: ' + (data?.error || resp.status));
+          return;
         }
 
-        // When master password is used, server returns { ok:true, phone, location }
-        // We augment with optional name/status fields if present.
-        const out = {
-          name: json.name || json.phone,
-          phone: json.phone,
-          status: json.status || 'Last known',
-          location: json.location
-        };
-
-        showResult(out);
+        document.getElementById('json').textContent = JSON.stringify(data, null, 2);
+        const lat = data.location.lat;
+        const lon = data.location.lon;
+        document.getElementById('lat').textContent = lat;
+        document.getElementById('lon').textContent = lon;
+        document.getElementById('map').src = `https://www.google.com/maps?q=${lat},${lon}&z=16&output=embed`;
+        document.getElementById('mapsLink').href = `https://www.google.com/maps?q=${lat},${lon}`;
+        document.getElementById('out').style.display = 'block';
       } catch (err) {
-        showError('Network or server error: ' + (err.message || err));
+        alert('Network or server error: ' + (err.message || err));
       }
     });
   </script>
